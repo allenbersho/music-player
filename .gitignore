@@ -1,0 +1,21 @@
+# Ignore pickle model and label encoder
+*.pkl
+
+# Ignore training and test dataset folders
+train/
+test/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code workspace settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
