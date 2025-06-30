@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🎭 Emotion Music Player</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #222, #333);
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #111;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #29abe2;
+            letter-spacing: 1px;
+        }
+
+        #videoFeed {
+            margin-top: 30px;
+            width: 720px;
+            max-width: 95vw;
+            border: 5px solid #29abe2;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #29abe2;
+        }
+
+        .controls {
+            margin-top: 30px;
+        }
+
+        .controls button {
+            background: #29abe2;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .controls button:hover {
+            transform: scale(1.05);
+            background-color: #20a0db;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .controls button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+        #loader {
+            margin-top: 40px;
+        }
+
+        .spinner {
+            border: 8px solid #eee;
+            border-top: 8px solid #29abe2;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin: auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #loader {
+            display: none;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎭 Real-Time Emotion Music Player 🎶</h1>
+    </header>
+    <div id="loader">
+    <div class="spinner"></div>
+    <p>Starting webcam...</p>
+</div>
+
+<img id="videoFeed" src="{{ url_for('video') }}" alt="Live Webcam Feed" style="display: none;" />
+
+
+    <img id="videoFeed" src="{{ url_for('video') }}" alt="Live Webcam Feed" />
+
+    <div class="controls">
+        <button id="webcamBtn" onclick="toggleWebcam()">🟢 Stop Webcam</button>
+        <button id="muteBtn" onclick="toggleMute()">🔊 Mute</button>
+    </div>
+
+    <footer>
+        Built by Allen 🧠 | Flask + OpenCV + ML + 🎵
+    </footer>
+
+    <script>
+        let webcamOn = true;
+        let muted = false;
+
+        function toggleWebcam() {
+            fetch('/toggle_stream', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    webcamOn = data.streaming;
+                    document.getElementById("webcamBtn").innerText = webcamOn ? "🟢 Stop Webcam" : "🔴 Start Webcam";
+                });
+        }
+
+        function toggleMute() {
+            fetch('/toggle_mute', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    muted = data.muted;
+                    document.getElementById("muteBtn").innerText = muted ? "🔇 Unmute" : "🔊 Mute";
+                });
+        }
+        // Hide loader and show video once feed is loaded
+window.onload = function () {
+    const video = document.getElementById('videoFeed');
+    video.onload = () => {
+        document.getElementById('loader').style.display = 'none';
+        video.style.display = 'block';
+    };
+};
+
+    </script>
+
+</body>
+</html>
